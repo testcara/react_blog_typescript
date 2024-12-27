@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES6",              // 编译目标（可以根据需要更改）
+    "module": "ESNext",           // 使用 ESNext 模块
+    "strict": true,               // 启用严格模式（推荐）
+    "jsx": "react-jsx",           // 使用 React JSX 转译
+    "esModuleInterop": true,
+    "moduleResolution": "node",      // 启用模块兼容性
+    "skipLibCheck": true,         // 跳过库文件的类型检查（可选）
+    "forceConsistentCasingInFileNames": true // 强制文件名一致性
+  },
+  "include": [
+    "src/**/*.ts",               // 包含所有的 TypeScript 文件
+    "src/**/*.tsx"               // 包含所有的 TSX 文件
+  ],
+  "exclude": [
+    "node_modules"               // 排除 node_modules 目录
+  ]
+}
