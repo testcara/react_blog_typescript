@@ -1,10 +1,15 @@
 import React from 'react';
 import './App.css';
-import { Button } from '@patternfly/react-core';
-
+import Header from './components/Header';
+import Footer from './components/Footer';
 function App() {
   return (
-    <><Button>测试</Button></>
+    <>
+    <Header></Header>
+    <div className='inner'>
+    </div>
+    <Footer></Footer>
+    </>
   );
 }
 
