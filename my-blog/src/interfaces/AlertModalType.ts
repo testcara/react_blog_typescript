@@ -10,7 +10,7 @@ export interface BaseModalProps {
   export interface AlertSuccessModalProps {
     isOpen: boolean;
     onClose: () => void;
-    title: string;
+    title: string | null;
   }
   
   // 定义 AlertDeletionModal 的 props 类型

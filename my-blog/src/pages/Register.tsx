@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Grid, GridItem } from "@patternfly/react-core";
 import { AlertSuccessModal } from "../components/AlertModal";
 import AuthForm from "../components/AuthForm";
-import { RegisterUserProps } from "../interfaces/AuthFormType";
-import { RegisterUserRequest } from "../interfaces/UserType";
+import { RegisterUserRequest,RegisterUserProps } from "../interfaces/UserType";
 
 const Register: React.FC<RegisterUserProps> = ({
   onRegister,

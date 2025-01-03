@@ -37,8 +37,8 @@ const AlertSuccessModal:React.FC<AlertSuccessModalProps>= ({ isOpen, onClose, ti
     <BaseModal
       isOpen={isOpen}
       onClose={onClose}
-      title={title}
-      message={title} // Same title used for message
+      title={title ?? ''}
+      message={title ?? ''} // Same title used for message
       footerButtons={footerButtons}
     />
   );

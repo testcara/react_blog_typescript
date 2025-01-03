@@ -8,7 +8,7 @@ import {
   InputGroupText,
   InputGroup,
 } from "@patternfly/react-core";
-import { AuthFormProps } from "../interfaces/AuthFormType";
+import { AuthFormProps } from "../interfaces/UserType";
 
 const AuthForm: React.FC<AuthFormProps> = ({
   onSubmit,

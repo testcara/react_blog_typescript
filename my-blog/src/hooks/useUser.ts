@@ -8,22 +8,26 @@ import {
 
 const useUser = () => {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [token, setToken] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // 从 localStorage 获取 token（如果存在）
   const getToken = () => localStorage.getItem("token");
-  // 自动获取当前登录用户信息（如果 token 存在）
-  useEffect(() => {
-    const token = getToken();
-    if (token) {
-      fetchCurrentUser(); // 有 token 就获取用户信息
-    }
-  }, []);
 
-  // 设置 token 到 localStorage
-  const setToken = (token: string) => {
-    localStorage.setItem("token", token);
+  // 获取当前登录用户信息
+  const fetchCurrentUser = async () => {
+    setErrorMessage(null);
+
+    try {
+      const response = await api.get("/api/users/me", {
+        headers: getAuthHeaders(), // 带上 token 进行认证
+      });
+      setUser(response.data); // 设置当前用户数据
+    } catch (err: any) {
+      const errorMessage = err.response?.data || "Failed to fetch current user";
+      setErrorMessage(errorMessage);
+    }
   };
 
   // 请求头配置，包含 token（如果存在）
@@ -32,63 +36,56 @@ const useUser = () => {
     return token ? { Authorization: `Bearer ${token}` } : {};
   };
 
-  // 获取当前登录用户信息
-  const fetchCurrentUser = async () => {
-    setLoading(true);
-    setErrorMessage(null);
-    try {
-      const response = await api.get("/api/users/me", {
-        headers: getAuthHeaders(), // 带上 token 进行认证
-      });
-      setUser(response.data); // 设置当前用户数据
-    } catch (err:any) {
-      const errorMessage =
-      err.response?.data || "Failed to fetch current user"
-      setErrorMessage(errorMessage);
-    } finally {
-      setLoading(false);
+  // 自动获取当前登录用户信息（如果 token 存在）
+  useEffect(() => {
+    setLoading(true)
+    const storedToken = getToken(); // Get token from localStorage
+    setToken(storedToken);  // Set the token in state
+    if (storedToken && !user) {
+      fetchCurrentUser(); // Fetch user data if token exists and user is not yet set
+    } else {
+      setLoading(false); // If no token, stop loading
     }
+  }, [user]); // Only run this effect if user is null (initial load)
+
+  // 设置 token 到 localStorage
+  const storeToken = (token: string) => {
+    localStorage.setItem("token", token);
   };
 
   // 注册用户
   const registerUser = async (userData: RegisterUserRequest) => {
-    setLoading(true);
     setErrorMessage(null);
 
     try {
-      const response = await api.post("/api/register", userData); // 注册用户
+      await api.post("/api/register", userData); // 注册用户
       setUser(null); // 注册成功后清除用户状态
     } catch (err: any) {
-      const errorMessage =
-        err.response?.data || "Failed to register user!";
+      const errorMessage = err.response?.data || "Failed to register user!";
       setErrorMessage(errorMessage);
-    } finally {
-      setLoading(false);
     }
   };
 
   // 登录用户
   const loginUser = async (userData: LoginUserRequest) => {
-    setLoading(true);
     setErrorMessage(null);
+
     try {
       const response = await api.post("/api/login", userData); // 登录请求，获取 token
       const { token } = response.data;
-      setToken(token); // 保存 token
-      fetchCurrentUser(); // 获取当前登录用户信息
-    } catch (err:any) {
-      const errorMessage =
-      err.response?.data || "Failed to log in!"; 
+      setToken(token); // Set token in state
+      storeToken(token); // Save token to localStorage
+      fetchCurrentUser(); // Fetch current user data after successful login
+    } catch (err: any) {
+      const errorMessage = err.response?.data || "Failed to log in!";
       setErrorMessage(errorMessage);
-    } finally {
-      setLoading(false);
     }
   };
 
   // 退出登录
   const logoutUser = () => {
     localStorage.removeItem("token");
-    setUser(null);
+    setUser(null); // Clear user state
     setErrorMessage(null);
     setLoading(false);
   };
@@ -97,6 +94,7 @@ const useUser = () => {
     user,
     loading,
     errorMessage,
+    getAuthHeaders,
     registerUser,
     loginUser, // 登录用户方法
     logoutUser,

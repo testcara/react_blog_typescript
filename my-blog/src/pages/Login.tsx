@@ -3,8 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { GridItem, Grid, Button } from "@patternfly/react-core";
 import { AlertSuccessModal } from "../components/AlertModal";
 import AuthForm from "../components/AuthForm";
-import { LoginUserProps } from "../interfaces/AuthFormType";
-import { LoginUserRequest } from "../interfaces/UserType";
+import { LoginUserRequest, LoginUserProps } from "../interfaces/UserType";
 const Login: React.FC<LoginUserProps> = ({
   onLogin,
   errorMessage
