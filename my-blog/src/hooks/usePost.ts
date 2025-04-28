@@ -8,7 +8,7 @@ import {
 import useUser from "./useUser"; // Importing useUser hook to get token
 
 const usePost = () => {
-  const {user, getAuthHeaders } = useUser(); // Getting auth headers from useUser hook
+  const { user, getAuthHeaders } = useUser(); // Getting auth headers from useUser hook
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -84,6 +84,7 @@ const usePost = () => {
   // Hook 初始化，获取所有帖子
   useEffect(() => {
     fetchPosts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   return {
